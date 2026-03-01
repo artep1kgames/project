@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали мероприятия</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/event.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="./index.html">EventManager</a>
+            </div>
+            <div class="nav-links">
+                <a href="./index.html">Главная</a>
+                <a href="./events.html">Мероприятия</a>
+                <a href="./calendar.html">Календарь</a>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline login-btn">Войти</button>
+                    <button class="btn btn-primary register-btn">Регистрация</button>
+                </div>
+                <div class="user-menu" style="display: none;">
+                    <span class="username"></span>
+                    <div class="dropdown-content">
+                        <a href="/profile.html">Профиль</a>
+                        <a href="/admin/" class="admin-link" style="display: none;">Админ панель</a>
+                        <a href="./admin.html" class="admin-link" style="display: none;">Модерация</a>
+                        <a href="#" id="logout-button">Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="event-details">
+            <div class="event-header">
+                <div class="header-content">
+                    <h1 id="eventTitle">Загрузка...</h1>
+                    <div class="event-status" id="eventStatus">Загрузка...</div>
+                </div>
+            </div>
+
+            <div class="event-content">
+                <div class="event-image">
+                    <img id="eventImage" src="" alt="Изображение мероприятия">
+                </div>
+
+                <div class="event-info">
+                    <div class="info-section">
+                        <h2><i class="fas fa-align-left"></i> Описание</h2>
+                        <p id="eventDescription">Загрузка...</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h2><i class="fas fa-info-circle"></i> Информация</h2>
+                        <ul>
+                            <li><i class="fas fa-calendar"></i> <span id="eventDate">Загрузка...</span></li>
+                            <li><i class="fas fa-map-marker-alt"></i> <span id="eventLocation">Загрузка...</span></li>
+                            <li><i class="fas fa-users"></i> <span id="eventParticipants">Загрузка...</span></li>
+                            <li><i class="fas fa-tag"></i> <span id="eventType">Загрузка...</span></li>
+                            <li><i class="fas fa-user"></i> <span id="eventOrganizer">Загрузка...</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section">
+                        <h2><i class="fas fa-tags"></i> Категории</h2>
+                        <div id="eventCategories" class="categories-list">Загрузка...</div>
+                    </div>
+
+                    <div class="event-actions" id="eventActions">
+                        <!-- Кнопки действий будут добавлены динамически -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно для сообщений -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Подтверждение удаления</h3>
+            <p>Вы уверены, что хотите удалить это мероприятие?</p>
+            <div class="modal-buttons">
+                <button id="confirmDelete" class="btn btn-danger">Удалить</button>
+                <button id="cancelDelete" class="btn btn-secondary">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 EventManager. Все права защищены.</p>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/event.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+                alert('Пожалуйста, войдите или зарегистрируйтесь для доступа к системе.');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html> 

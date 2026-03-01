@@ -1,0 +1,527 @@
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.profile-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.profile-header p {
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.profile-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+}
+
+.profile-sidebar {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-sidebar h2 {
+    color: var(--primary-color);
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profile-sidebar p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.profile-sidebar .role {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.profile-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.events-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.events-section h2 {
+    color: var(--primary-color);
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.event-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.event-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.event-card-content {
+    padding: 1.25rem;
+}
+
+.event-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    color: var(--primary-color);
+}
+
+.event-card p {
+    margin: 0.5rem 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.event-card .event-date {
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+.event-card .event-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.event-card .status-upcoming {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.event-card .status-past {
+    background: #f5f5f5;
+    color: #757575;
+}
+
+.event-card .status-cancelled {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.event-card .event-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.event-card .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.event-card .btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.event-card .btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.event-card .btn-secondary {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.event-card .btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+.event-card .btn-danger {
+    background: #f44336;
+    color: white;
+}
+
+.event-card .btn-danger:hover {
+    background: #d32f2f;
+}
+
+/* Стили для кнопок навигации */
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.nav-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-button:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.nav-button i {
+    margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .profile-content {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        order: 2;
+    }
+
+    .profile-main {
+        order: 1;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav-button {
+        width: 100%;
+    }
+}
+
+.profile-section {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.profile-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.profile-content {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-avatar button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.profile-avatar button:hover {
+    background: #0056b3;
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.profile-details h2 {
+    margin: 0 0 0.5rem;
+    color: #333;
+}
+
+.profile-details p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.user-events {
+    margin-top: 3rem;
+}
+
+.events-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: #f8f9fa;
+    color: #666;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background: #e9ecef;
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.event-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.event-card h3 {
+    margin: 0 0 1rem;
+    color: #333;
+}
+
+.event-date,
+.event-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+.event-description {
+    margin: 1rem 0;
+    color: #666;
+}
+
+.event-actions {
+    margin-top: 1rem;
+}
+
+.no-events {
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+}
+
+/* Модальные окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Кнопки */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+    }
+
+    .events-tabs {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 1rem auto;
+    }
+} 

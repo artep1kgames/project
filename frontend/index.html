@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система управления мероприятиями</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="./index.html">EventManager</a>
+            </div>
+            <div class="nav-links">
+                <a href="./index.html" class="active">Главная</a>
+                <a href="./events.html">Мероприятия</a>
+                <a href="./calendar.html">Календарь</a>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline login-btn">Войти</button>
+                    <button class="btn btn-primary register-btn">Регистрация</button>
+                </div>
+                <div class="user-menu" style="display: none;">
+                    <span class="username"></span>
+                    <div class="dropdown-content">
+                        <a href="/profile.html">Профиль</a>
+                        <a href="/admin/" class="admin-link" style="display: none;">Админ панель</a>
+                        <a href="./admin.html" class="admin-link" style="display: none;">Модерация</a>
+                        <a href="#" id="logout-button">Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Добро пожаловать в систему управления мероприятиями</h1>
+            <p>Организуйте и участвуйте в мероприятиях с легкостью</p>
+            <div class="hero-buttons">
+                <a href="./events.html" class="btn btn-primary">Смотреть мероприятия</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Возможности системы</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Управление мероприятиями</h3>
+                    <p>Создавайте и управляйте мероприятиями с удобным интерфейсом</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Регистрация участников</h3>
+                    <p>Простая система регистрации и управления участниками</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Статистика и отчеты</h3>
+                    <p>Получайте подробную статистику по вашим мероприятиям</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 EventManager. Все права защищены.</p>
+    </footer>
+
+    <!-- Загрузка скриптов -->
+    <script src="./js/config.js" defer></script>
+    <script src="./js/auth.js" defer></script>
+    <script src="./js/navigation.js" defer></script>
+    <script src="./js/main.js" defer></script>
+</body>
+</html> 

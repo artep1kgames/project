@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Календарь - EventManager</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/calendar.css">
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="./index.html">EventManager</a>
+            </div>
+            <div class="nav-links">
+                <a href="./index.html">Главная</a>
+                <a href="./events.html">Мероприятия</a>
+                <a href="./calendar.html" class="active">Календарь</a>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline login-btn">Войти</button>
+                    <button class="btn btn-primary register-btn">Регистрация</button>
+                </div>
+                <div class="user-menu" style="display: none;">
+                    <span class="username"></span>
+                    <div class="dropdown-content">
+                        <a href="/profile.html">Профиль</a>
+                        <a href="/admin/" class="admin-link" style="display: none;">Админ панель</a>
+                        <a href="./admin.html" class="admin-link" style="display: none;">Модерация</a>
+                        <a href="#" id="logout-button">Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="calendar-section">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h1>Календарь мероприятий</h1>
+                    <div class="calendar-controls">
+                        <button id="prevMonth" class="btn btn-outline">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h2 id="currentMonth"></h2>
+                        <button id="nextMonth" class="btn btn-outline">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="calendar"></div>
+            </div>
+            <div class="events-list">
+                <h2>Мероприятия на <span id="selectedDate"></span></h2>
+                <div id="dayEvents"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 EventManager. Все права защищены.</p>
+    </footer>
+
+    <!-- Загрузка скриптов -->
+    <script src="./js/config.js" defer></script>
+    <script src="./js/auth.js" defer></script>
+    <script src="./js/navigation.js" defer></script>
+    <script src="./js/main.js" defer></script>
+    <!-- FullCalendar скрипты -->
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js' defer></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js' defer></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js' defer></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.10/index.global.min.js' defer></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js' defer></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/ru.global.min.js' defer></script>
+    <script src="./js/calendar.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+                alert('Пожалуйста, войдите или зарегистрируйтесь для доступа к системе.');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мероприятия - EventManager</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/events.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="./index.html">EventManager</a>
+            </div>
+            <div class="nav-links">
+                <a href="./index.html">Главная</a>
+                <a href="./events.html" class="active">Мероприятия</a>
+                <a href="./calendar.html">Календарь</a>
+                <div class="auth-buttons">
+                    <button class="btn btn-outline login-btn">Войти</button>
+                    <button class="btn btn-primary register-btn">Регистрация</button>
+                </div>
+                <div class="user-menu" style="display: none;">
+                    <span class="username"></span>
+                    <div class="dropdown-content">
+                        <a href="/profile.html">Профиль</a>
+                        <a href="/admin/" class="admin-link" style="display: none;">Админ панель</a>
+                        <a href="./admin.html" class="admin-link" style="display: none;">Модерация</a>
+                        <a href="#" id="logout-button">Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="events-header">
+            <h1>Мероприятия</h1>
+            <div class="events-controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Поиск мероприятий...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-box">
+                    <select id="typeFilter">
+                        <option value="">Все категории</option>
+                        <!-- Категории будут загружены динамически -->
+                    </select>
+                </div>
+                <button id="createEventBtn" class="btn btn-primary" style="display: none;">
+                    <i class="fas fa-plus"></i> Создать мероприятие
+                </button>
+            </div>
+        </section>
+
+        <section class="events-grid" id="eventsContainer">
+            <!-- События будут добавлены динамически -->
+        </section>
+    </main>
+
+    <!-- Модальное окно создания мероприятия -->
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Создание мероприятия</h2>
+            <div id="createEventError" class="error-message" style="display: none;"></div>
+            <form id="createEventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Название</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventShortDescription">Краткое описание</label>
+                    <textarea id="eventShortDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventFullDescription">Полное описание</label>
+                    <textarea id="eventFullDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Место проведения</label>
+                    <input type="text" id="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventStartDate">Дата начала</label>
+                    <input type="datetime-local" id="eventStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventEndDate">Дата окончания</label>
+                    <input type="datetime-local" id="eventEndDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventMaxParticipants">Максимальное количество участников</label>
+                    <input type="number" id="eventMaxParticipants" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventType">Тип мероприятия</label>
+                    <select id="eventType" required>
+                        <option value="CONFERENCE">Конференция</option>
+                        <option value="SEMINAR">Семинар</option>
+                        <option value="WORKSHOP">Мастер-класс</option>
+                        <option value="EXHIBITION">Выставка</option>
+                        <option value="CONCERT">Концерт</option>
+                        <option value="FESTIVAL">Фестиваль</option>
+                        <option value="SPORTS">Спортивное мероприятие</option>
+                        <option value="OTHER">Другое</option>
+                    </select>
+                </div>
+                <div class="form-group" id="customTypeGroup" style="display: none;">
+                    <label for="customEventType">Укажите тип мероприятия</label>
+                    <input type="text" id="customEventType" placeholder="Введите тип мероприятия">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isPaidEvent" name="isPaidEvent">
+                        <label for="isPaidEvent">Платное мероприятие</label>
+                    </div>
+                </div>
+                <div class="form-group" id="priceGroup" style="display: none;">
+                    <label for="eventPrice">Стоимость билета (₽)</label>
+                    <input type="number" id="eventPrice" min="0" step="0.01">
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label for="eventImage">Изображение</label>
+                    <input type="file" id="eventImage" accept="image/*">
+                </div>
+                <input type="hidden" id="eventStatus" value="PENDING">
+                <button type="submit" class="btn btn-primary">Отправить на модерацию</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 EventManager. Все права защищены.</p>
+    </footer>
+
+    <!-- Загрузка скриптов -->
+    <script src="./js/config.js" defer></script>
+    <script src="./js/auth.js" defer></script>
+    <script src="./js/navigation.js" defer></script>
+    <script src="./js/events.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+                alert('Пожалуйста, войдите или зарегистрируйтесь для доступа к системе.');
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html> 

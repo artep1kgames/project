@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модерация мероприятий - EventManager</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .moderation-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .event-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .event-title {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .event-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .event-details {
+            margin-bottom: 15px;
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-view {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex-grow: 1;
+        }
+        
+        .status-filter {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="./index.html">EventManager</a>
+            </div>
+            <div class="nav-links">
+                <a href="./index.html">Главная</a>
+                <a href="./events.html">Мероприятия</a>
+                <a href="./calendar.html">Календарь</a>
+                <div class="user-menu" style="display: none;">
+                    <span class="username"></span>
+                    <div class="dropdown-content">
+                        <a href="./profile.html">Профиль</a>
+                        <a href="./admin.html" class="admin-link">Модерация</a>
+                        <a href="#" class="logout-btn">Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="moderation-container">
+        <h1>Модерация мероприятий</h1>
+        
+        <div class="filter-container">
+            <input type="text" class="search-input" placeholder="Поиск мероприятий...">
+            <select class="status-filter">
+                <option value="all">Все статусы</option>
+                <option value="pending">На модерации</option>
+                <option value="approved">Одобренные</option>
+                <option value="rejected">Отклоненные</option>
+            </select>
+                    </div>
+
+        <div id="eventsList">
+            <!-- События будут добавлены динамически -->
+            </div>
+    </main>
+
+    <!-- Модальное окно для просмотра деталей мероприятия -->
+    <div id="eventModal" class="modal" style="display: none;">
+            <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalEventTitle"></h2>
+            <div id="modalEventDetails"></div>
+            <div class="event-actions">
+                <button class="btn btn-approve" id="approveEvent">Одобрить</button>
+                <button class="btn btn-reject" id="rejectEvent">Отклонить</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 EventManager. Все права защищены.</p>
+    </footer>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/navigation.js"></script>
+    <script>
+        // Функция для отображения сообщений
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            // Добавляем стили для сообщений
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.padding = '10px 20px';
+            messageDiv.style.borderRadius = '5px';
+            messageDiv.style.zIndex = '1000';
+            
+            // Устанавливаем цвет в зависимости от типа сообщения
+            switch(type) {
+                case 'success':
+                    messageDiv.style.backgroundColor = '#4CAF50';
+                    messageDiv.style.color = 'white';
+                    break;
+                case 'error':
+                    messageDiv.style.backgroundColor = '#f44336';
+                    messageDiv.style.color = 'white';
+                    break;
+                default:
+                    messageDiv.style.backgroundColor = '#2196F3';
+                    messageDiv.style.color = 'white';
+            }
+            
+            document.body.appendChild(messageDiv);
+            
+            // Удаляем сообщение через 3 секунды
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Функция для получения заголовков с токеном авторизации
+        function getAuthHeaders() {
+            return {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        // Проверка прав администратора
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+                window.location.href = './index.html';
+                return;
+            }
+            
+            // Загрузка мероприятий
+            await loadEvents();
+            
+            // Инициализация фильтров
+            initializeFilters();
+        });
+
+        // Загрузка мероприятий
+        async function loadEvents() {
+            try {
+                console.log('Загрузка мероприятий для модерации');
+                const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.EVENTS.BASE), {
+                    method: 'GET',
+                    headers: {
+                        ...getAuthHeaders(),
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Ошибка ответа:', errorText);
+                    throw new Error('Ошибка при загрузке мероприятий');
+                }
+                
+                const events = await response.json();
+                console.log('Получены мероприятия:', events);
+                
+                // Фильтруем мероприятия по статусу
+                const moderationEvents = events.filter(event => event.status === 'pending');
+                console.log('Отфильтрованные мероприятия:', moderationEvents);
+                
+                displayEvents(moderationEvents);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showError('Не удалось загрузить мероприятия');
+            }
+        }
+
+        // Отображение мероприятий
+        function displayEvents(events) {
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventCard = createEventCard(event);
+                eventsList.appendChild(eventCard);
+            });
+        }
+
+        // Создание карточки мероприятия
+        function createEventCard(event) {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            
+            const statusClass = {
+                'pending': 'status-pending',
+                'approved': 'status-approved',
+                'rejected': 'status-rejected'
+            }[event.status] || 'status-pending';
+            
+            card.innerHTML = `
+                <div class="event-header">
+                    <div class="event-title">${event.title}</div>
+                    <div class="event-status ${statusClass}">${getStatusText(event.status)}</div>
+                </div>
+                <div class="event-details">
+                    <p><strong>Организатор:</strong> ${event.organizer ? (event.organizer.full_name || event.organizer.username || event.organizer.email) : 'Не указан'}</p>
+                    <p><strong>Дата:</strong> ${event.start_date ? new Date(event.start_date).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Не указана'}</p>
+                    <p><strong>Место:</strong> ${event.location}</p>
+                </div>
+                <div class="event-actions">
+                    <button class="btn btn-view" onclick="viewEvent(${event.id})">Просмотр</button>
+                    ${event.status === 'pending' ? `
+                        <button class="btn btn-approve" onclick="approveEvent(${event.id})">Одобрить</button>
+                        <button class="btn btn-reject" onclick="rejectEvent(${event.id})">Отклонить</button>
+                    ` : ''}
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Получение текста статуса
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'На модерации',
+                'approved': 'Одобрено',
+                'rejected': 'Отклонено'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Просмотр деталей мероприятия
+        async function viewEvent(eventId) {
+            try {
+                const response = await fetch(getApiUrl(`/api/admin/events/${eventId}`), {
+                    headers: {
+                        ...API_CONFIG.HEADERS,
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Ошибка при загрузке мероприятия');
+                }
+                
+                const event = await response.json();
+                showEventModal(event);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showError('Не удалось загрузить детали мероприятия');
+            }
+        }
+
+        // Показ модального окна с деталями мероприятия
+        function showEventModal(event) {
+            console.log('Полученные данные мероприятия:', event); // Для отладки
+            
+            const modal = document.getElementById('eventModal');
+            const title = document.getElementById('modalEventTitle');
+            const details = document.getElementById('modalEventDetails');
+            
+            // Форматирование даты
+            const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                return date.toLocaleString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+            
+            // Получение информации об организаторе
+            const getOrganizerInfo = (organizer) => {
+                if (!organizer) return 'Не указан';
+                return `${organizer.full_name || organizer.username || organizer.email} (${organizer.role})`;
+            };
+            
+            title.textContent = event.title;
+            details.innerHTML = `
+                <p><strong>Краткое описание:</strong> ${event.short_description}</p>
+                <p><strong>Полное описание:</strong> ${event.full_description}</p>
+                <p><strong>Организатор:</strong> ${getOrganizerInfo(event.organizer)}</p>
+                <p><strong>Дата начала:</strong> ${formatDate(event.start_date)}</p>
+                <p><strong>Дата окончания:</strong> ${formatDate(event.end_date)}</p>
+                <p><strong>Место:</strong> ${event.location}</p>
+                <p><strong>Статус:</strong> ${getStatusText(event.status)}</p>
+                <p><strong>Тип мероприятия:</strong> ${event.event_type || 'Не указан'}</p>
+                <p><strong>Участники:</strong> ${event.current_participants}/${event.max_participants}</p>
+                <p><strong>Дата создания:</strong> ${formatDate(event.created_at)}</p>
+                ${event.rejection_reason ? `<p><strong>Причина отклонения:</strong> ${event.rejection_reason}</p>` : ''}
+                ${event.categories && event.categories.length > 0 ? `
+                    <p><strong>Категории:</strong></p>
+                    <ul>
+                        ${event.categories.map(category => `<li>${category.name}</li>`).join('')}
+                    </ul>
+                ` : ''}
+                ${event.images && event.images.length > 0 ? `
+                    <p><strong>Изображения:</strong></p>
+                    <div class="event-images">
+                        ${event.images.map(image => `
+                            <img src="${image.image_url}" alt="Изображение мероприятия" class="event-image">
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+            
+            modal.style.display = 'block';
+            
+            // Обработчики кнопок
+            document.getElementById('approveEvent').onclick = () => approveEvent(event.id);
+            document.getElementById('rejectEvent').onclick = () => rejectEvent(event.id);
+        }
+
+        // Одобрение мероприятия
+        async function approveEvent(eventId) {
+            try {
+                const response = await fetch(`${API_URL}/api/admin/events/${eventId}/approve`, {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при одобрении мероприятия');
+                }
+
+                const result = await response.json();
+                showMessage(result.message || 'Мероприятие успешно одобрено', 'success');
+                await loadEvents(); // Перезагружаем список мероприятий
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showMessage('Не удалось одобрить мероприятие', 'error');
+            }
+        }
+
+        // Отклонение мероприятия
+        async function rejectEvent(eventId) {
+            const reason = prompt('Укажите причину отклонения:');
+            if (!reason) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/events/${eventId}/reject?reason=${encodeURIComponent(reason)}`, {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при отклонении мероприятия');
+                }
+
+                const result = await response.json();
+                showMessage(result.message || 'Мероприятие отклонено', 'success');
+                await loadEvents(); // Перезагружаем список мероприятий
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showMessage('Не удалось отклонить мероприятие', 'error');
+            }
+        }
+
+        // Инициализация фильтров
+        function initializeFilters() {
+            const searchInput = document.querySelector('.search-input');
+            const statusFilter = document.querySelector('.status-filter');
+            
+            searchInput.addEventListener('input', filterEvents);
+            statusFilter.addEventListener('change', filterEvents);
+        }
+
+        // Фильтрация мероприятий
+        async function filterEvents() {
+            const searchText = document.querySelector('.search-input').value.toLowerCase();
+            const status = document.querySelector('.status-filter').value;
+            
+            try {
+                console.log('Загрузка мероприятий для фильтрации');
+                const response = await fetch(getApiUrl(API_CONFIG.ENDPOINTS.EVENTS.BASE), {
+                    method: 'GET',
+                    headers: {
+                        ...getAuthHeaders(),
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Ошибка ответа:', errorText);
+                    throw new Error('Ошибка при загрузке мероприятий');
+                }
+                
+                const events = await response.json();
+                console.log('Получены мероприятия для фильтрации:', events);
+                
+                // Фильтруем мероприятия
+                const filteredEvents = events.filter(event => {
+                    const matchesSearch = event.title.toLowerCase().includes(searchText) ||
+                                        event.description.toLowerCase().includes(searchText);
+                    const matchesStatus = status === 'all' || event.status === status;
+                    return matchesSearch && matchesStatus;
+                });
+                
+                console.log('Отфильтрованные мероприятия:', filteredEvents);
+                displayEvents(filteredEvents);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showError('Не удалось отфильтровать мероприятия');
+            }
+        }
+
+        // Закрытие модального окна
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('eventModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html> 

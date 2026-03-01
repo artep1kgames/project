@@ -123,6 +123,13 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
     print(f"Email: {form_data.username}")
     
     try:
+        # Ограничиваем длину пароля для bcrypt (максимум 72 байта)
+        if len(form_data.password) > 72:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пароль не должен быть длиннее 72 символов"
+            )
+
         # Ищем пользователя по email
         query = select(User).where(User.email == form_data.username)
         result = await db.execute(query)

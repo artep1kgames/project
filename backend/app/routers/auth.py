@@ -64,6 +64,13 @@ async def get_current_user(request: Request, token: str = Depends(oauth2_scheme)
 
 @router.post("/register", response_model=UserResponse)
 async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
+    # Ограничиваем длину пароля для bcrypt (максимум 72 байта)
+    if len(user.password) > 72:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Пароль не должен быть длиннее 72 символов"
+        )
+
     # Проверяем, не существует ли уже пользователь с таким email
     query = select(User).where(User.email == user.email)
     result = await db.execute(query)
